@@ -52,7 +52,7 @@ public final class Example {
     private static volatile String currentPrompt = null;
 
     static {
-        URL resource = Example.class.getResource("/libtdjni.so");
+        URL resource = Example.class.getResource("/libtdjni.dylib");
         System.out.println(resource != null ? resource.getPath() : "null");
         System.load(resource.getPath());
     }
