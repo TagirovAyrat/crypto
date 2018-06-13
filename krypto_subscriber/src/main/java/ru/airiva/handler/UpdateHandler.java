@@ -1,4 +1,4 @@
-package ru.airiva;
+package ru.airiva.handler;
 
 import org.telegram.telegrambots.api.methods.BotApiMethod;
 import org.telegram.telegrambots.api.objects.Update;

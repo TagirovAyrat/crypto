@@ -1,8 +1,12 @@
 package ru.airiva.properties;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BotProperties {
+    public BotProperties() {
+    }
 
     @Value("${bot.username}")
     public String username;
@@ -27,6 +31,12 @@ public class BotProperties {
 
     @Value("${bot.certificate.path}")
     public String certificatePath;
+
+    @Value("${proxy.host}")
+    public String proxyHost;
+
+    @Value("${proxy.port}")
+    public Integer proxyPort;
 
 
 }

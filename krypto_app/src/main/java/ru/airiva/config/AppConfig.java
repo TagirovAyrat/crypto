@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @ComponentScan(value = {"ru.airiva.controller"})
-@Import({ParserAppConfig.class})
+@Import({ParserAppConfig.class, SubscriberAppConfig.class})
 @EnableWebMvc
 public class AppConfig {
 }

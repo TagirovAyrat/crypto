@@ -1,13 +1,15 @@
 package ru.airiva.bot;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.methods.BotApiMethod;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
-import ru.airiva.UpdateHandler;
+import ru.airiva.handler.UpdateHandler;
 import ru.airiva.handler.UpdateHandlerFactory;
 import ru.airiva.properties.BotProperties;
 
+@Component
 public class KryptoPrideWebHookBot extends TelegramWebhookBot {
 
     private BotProperties botProperties;
