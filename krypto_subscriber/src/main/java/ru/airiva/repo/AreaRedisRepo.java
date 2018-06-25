@@ -23,11 +23,15 @@ public class AreaRedisRepo {
 
 
     public void put(String tlgId, SessionData sessionData) {
-        this.redisTemplate.opsForHash().putIfAbsent(tlgId, 1, sessionData);
+        this.redisTemplate.opsForHash().put(tlgId, 1, sessionData);
     }
 
 
     public SessionData get(String tlgId) {
         return (SessionData) this.redisTemplate.opsForHash().get(tlgId, 1);
+    }
+
+    public Boolean remove(String tlgId) {
+        return this.redisTemplate.delete(tlgId);
     }
 }

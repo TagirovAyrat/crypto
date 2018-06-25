@@ -38,5 +38,7 @@ public class BotProperties {
     @Value("${proxy.port}")
     public Integer proxyPort;
 
+    @Value("${rows.count}")
+    public Integer rowsCount;
 
 }

@@ -1,8 +1,9 @@
 package ru.airiva.entity;
 
+import java.io.Serializable;
 import java.util.Locale;
 
-public class SessionData {
+public class SessionData implements Serializable {
     private String chatId;
     private Locale locale;
     private String currentStep;
@@ -13,6 +14,9 @@ public class SessionData {
         this.locale = locale;
         this.currentStep = currentStep;
         this.currentCommand = currentCommand;
+    }
+
+    public SessionData() {
     }
 
     public String getChatId() {

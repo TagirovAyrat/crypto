@@ -10,15 +10,13 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.telegram.telegrambots.ApiContext;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import ru.airiva.bot.KryptoPrideLongPolingBot;
+import ru.airiva.entity.SessionData;
 
 @Configuration
 @PropertySource(value = "classpath:bot.config.properties", encoding = "UTF-8")
 @ComponentScan(value = {"ru.airiva"})
 public class SubscriberAppConfig {
-    @Bean
-    KryptoPrideLongPolingBot kryptoPrideLongPolingBot() {
-        return new KryptoPrideLongPolingBot(ApiContext.getInstance(DefaultBotOptions.class));
-    }
+
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration("localhost", 6379);
@@ -26,8 +24,8 @@ public class SubscriberAppConfig {
         return factory;
     }
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
+    public RedisTemplate<String, SessionData> redisTemplate() {
+        RedisTemplate<String, SessionData> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory());
         return template;
     }

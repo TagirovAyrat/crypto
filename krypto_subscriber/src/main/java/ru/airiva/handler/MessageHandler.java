@@ -7,10 +7,12 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.methods.BotApiMethod;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
+import ru.airiva.commands.CancelCommand;
 import ru.airiva.commands.CommandMarker;
 import ru.airiva.entity.SessionData;
 import ru.airiva.enums.CommandList;
 import ru.airiva.repo.AreaRedisRepo;
+import ru.airiva.utils.KeyboardUtils;
 import ru.airiva.utils.MessageUtils;
 import ru.airiva.utils.ReflectionUtils;
 import ru.airiva.utils.SpringContextProvider;
@@ -36,48 +38,61 @@ public class MessageHandler implements UpdateHandler {
     @Override
     public BotApiMethod handle(Update update) {
         SendMessage sendMessage;
-        String message;
-        List<Method> methodsByStep = null;
+        String currentStep = null;
+        List<Method> methodsByStep ;
         Method methodToRun = null;
-        message = update.getMessage().getText();
+        Class<? extends CommandMarker> commandClass;
+
+        //Получаем tgId из апдейта и текущее сообщение
         Integer id = update.getMessage().getFrom().getId();
+        String message = update.getMessage().getText();
+        //Получаем текущий контекст
         SessionData sessionData = areaRedisRepo.get(String.valueOf(id));
-        String currentStep = sessionData.getCurrentStep();
-        String inputCommand = MessageUtils.extractCommandFromMessage(message).toUpperCase();
-        String command;
-        //Смотрим есть ли у нас такая команда в боте
-        try {
-            command = CommandList.valueOf(inputCommand).toString();
-        } catch (IllegalArgumentException e) {
+
+        //Избавляемся от юникода в сообщении
+        String inputCommand = MessageUtils.extractCommandFromMessage(message);
+        if (inputCommand == null) {
             return MessageUtils.unknownOperationResponse(sessionData, id);
         }
-        //Если есть то находим класс который отвечает за эту команду
-        Class<? extends CommandMarker> commandClass = ReflectionUtils.findContextByCommand(command);
+        if (inputCommand.equalsIgnoreCase(CommandList.CANCEL.name())) {
+            CancelCommand bean = SpringContextProvider.getApplicationContext().getBean(CancelCommand.class);
+            return bean.initial(update);
+        }
+        if (sessionData == null) {
+            commandClass = ReflectionUtils.findContextByCommand(inputCommand.toUpperCase());
+        } else {
+            commandClass = ReflectionUtils.findContextByCommand(sessionData.getCurrentCommand());
+            currentStep = sessionData.getCurrentStep();
+        }
 
-        //Если команда состоит из шагов то ищем текущий шаг
-        if (currentStep != null) {
-            methodsByStep = ReflectionUtils.getMethodsByStep(commandClass, currentStep);
-            if (methodsByStep != null ) {
-                //Если вариант только один, то мы нашли наш метод
-                if (methodsByStep.size() == 1) {
-                    methodToRun = methodsByStep.get(0);
-                } else if (methodsByStep.size() > 1) {
-                    //Если методов несколько то ищем по введенному тексту
-                    methodToRun = ReflectionUtils.findMethodByTextEquals(methodsByStep, command, sessionData);
+        try {
+            if (currentStep != null) {
+                //Если команда состоит из шагов то ищем текущий шаг
+                methodsByStep = ReflectionUtils.getMethodsByStep(commandClass, currentStep);
+                if (methodsByStep != null ) {
+                    //Если вариант только один, то мы нашли наш метод
+                    if (methodsByStep.size() == 1) {
+                        methodToRun = methodsByStep.get(0);
+                    } else if (methodsByStep.size() > 1) {
+                        //Если методов несколько то ищем по введенному тексту
+                            methodToRun = ReflectionUtils.findMethodByTextEquals(methodsByStep, inputCommand);
+                    }
+                }
+            }else {
+                //Ищем по введенному тексту, если не нашли то ищем метод по умолчанию
+                methodToRun = ReflectionUtils.findMethodByTextEqualsInCommandClass(commandClass, inputCommand);
+                //Если класс найден, но нет шага, то выполняем метод по умолчанию - initial
+                if (methodToRun == null) {
+                    methodToRun = ReflectionUtils.getMethodsByCommand(commandClass);
                 }
             }
-        }else {
-            //Если класс найден, но нет шага, то выполняем метод по умолчанию - initial
-            methodToRun = ReflectionUtils.getMethodsByCommand(commandClass);
+        } catch (IllegalArgumentException e) {
+            MessageUtils.sendDefaultErrorMessage(id);
         }
         CommandMarker bean = SpringContextProvider.getApplicationContext().getBean(commandClass);
-        sendMessage = ReflectionUtils.invokeMethod(methodToRun, bean);
+        sendMessage = ReflectionUtils.invokeMethod(methodToRun, bean, update);
         return sendMessage;
     }
-
-
-
-
 
 
 
