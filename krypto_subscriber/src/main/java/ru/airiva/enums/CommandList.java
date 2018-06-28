@@ -11,6 +11,7 @@ public enum CommandList {
     UNPAIDORDERS,
     EXCHANGE,
     SUPPORT,
+    LANGUAGE,
     RU,
     EN;
 }

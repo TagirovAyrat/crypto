@@ -70,22 +70,32 @@ public class MessageUtils {
         }
     }
 
-    public static String extractCommandFromMessage(String message) {
+    public static String extractCommandFromMessage(String message, SessionData sessionData) {
+        Locale locale;
+        Map<String, String> commands = new HashMap<>();
         String resultMessage = null;
         String messageWithoutSlash = null;
-        Pattern pattern = Pattern.compile("([A-Za-z_]+)[\\s]?");
+        Pattern pattern = Pattern.compile("(/)([A-Za-z]+)[\\s]?");
         Matcher matcher = pattern.matcher(message);
         if (matcher.find()) {
-            messageWithoutSlash =  matcher.group(1);
+            messageWithoutSlash =  matcher.group(2);
         }
-        for (CommandList value : CommandList.values()) {
-            if (messageWithoutSlash.contains(value.name())) {
-                resultMessage = value.name();
-                break;
+        if (sessionData == null || sessionData.getLocale() == null) {
+            locale = Locale.ENGLISH;
+        } else {
+            locale = sessionData.getLocale();
+        }
+        ResourceBundle resources = ResourceBundle.getBundle("lang", locale);
+        ResourceBundle utf8PropertyResourceBundle = MessageUtils.createUtf8PropertyResourceBundle(resources);
+        for (String s : utf8PropertyResourceBundle.keySet()) {
+            commands.put(utf8PropertyResourceBundle.getString(s), s);
+        }
+        for (String s : commands.keySet()) {
+            if (message.contains(s)) {
+                resultMessage = commands.get(s);
             }
         }
-
-        return resultMessage == null ? messageWithoutSlash : resultMessage;
+        return resultMessage != null ? resultMessage : messageWithoutSlash;
     }
 
 
@@ -135,6 +145,8 @@ public class MessageUtils {
         }
     }
 
-
-
+    public static void main(String[] args) {
+        String language = "🇬🇧UK";
+        extractCommandFromMessage(language, null);
+    }
 }

@@ -50,11 +50,7 @@ public class StartCommand implements CommandMarker {
             ResourceBundle utf8PropertyResourceBundle = MessageUtils.createUtf8PropertyResourceBundle(resources);
             String greetings = utf8PropertyResourceBundle.getString("greetings");
             ReplyKeyboardMarkup replyKeyboardMarkup = null;
-            try {
-                replyKeyboardMarkup = KeyboardUtils.generateReplyKeyboard(KeyboardUtils.getKeyboardDependsOnCommands());
-            } catch (IllegalAccessException | IOException e) {
-                LOGGER.error("Execution method error", e.getMessage());
-            }
+            replyKeyboardMarkup = KeyboardUtils.generateReplyKeyboard(KeyboardUtils.getStaticKeyboard(sessionData));
             return MessageUtils.replyWithReplyKeyboard(greetings, tgId, replyKeyboardMarkup);
         }
     }
@@ -76,5 +72,4 @@ public class StartCommand implements CommandMarker {
         areaRedisRepo.put(String.valueOf(tgId), sessionData);
         return initial(update);
     }
-
 }

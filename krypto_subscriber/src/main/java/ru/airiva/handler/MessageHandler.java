@@ -12,7 +12,6 @@ import ru.airiva.commands.CommandMarker;
 import ru.airiva.entity.SessionData;
 import ru.airiva.enums.CommandList;
 import ru.airiva.repo.AreaRedisRepo;
-import ru.airiva.utils.KeyboardUtils;
 import ru.airiva.utils.MessageUtils;
 import ru.airiva.utils.ReflectionUtils;
 import ru.airiva.utils.SpringContextProvider;
@@ -50,7 +49,7 @@ public class MessageHandler implements UpdateHandler {
         SessionData sessionData = areaRedisRepo.get(String.valueOf(id));
 
         //Избавляемся от юникода в сообщении
-        String inputCommand = MessageUtils.extractCommandFromMessage(message);
+        String inputCommand = MessageUtils.extractCommandFromMessage(message, sessionData);
         if (inputCommand == null) {
             return MessageUtils.unknownOperationResponse(sessionData, id);
         }
