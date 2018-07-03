@@ -53,7 +53,7 @@ public class MessageHandler implements UpdateHandler {
         if (inputCommand == null) {
             return MessageUtils.unknownOperationResponse(sessionData, id);
         }
-        if (inputCommand.equalsIgnoreCase(CommandList.CANCEL.name())) {
+        if (inputCommand.equalsIgnoreCase(CommandList.CANCEL.name()) || inputCommand.equalsIgnoreCase(CommandList.LANGUAGE.name())) {
             CancelCommand bean = SpringContextProvider.getApplicationContext().getBean(CancelCommand.class);
             return bean.initial(update);
         }

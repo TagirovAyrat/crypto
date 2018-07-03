@@ -41,10 +41,6 @@ public class CancelCommand implements CommandMarker {
         Integer tgId = MessageUtils.getTlgIdDependsOnUpdateType(update);
         SessionData sessionData = areaRedisRepo.get(String.valueOf(tgId));
         if (sessionData != null) {
-            Locale locale = sessionData.getLocale() != null ? sessionData.getLocale() : DEFAULT_LOCALE;
-            ResourceBundle resources = ResourceBundle.getBundle("lang", locale);
-            ResourceBundle utf8PropertyResourceBundle = MessageUtils.createUtf8PropertyResourceBundle(resources);
-            String contextCleared = utf8PropertyResourceBundle.getString("contextCleared");
             areaRedisRepo.remove(String.valueOf(tgId));
         }
         return startCommand.initial(update);
