@@ -2,10 +2,12 @@ package ru.airiva.service.cg;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.airiva.entities.TlgChatPairEntity;
 import ru.airiva.exception.*;
 import ru.airiva.parser.Courier;
 import ru.airiva.parser.Expression;
 import ru.airiva.parser.Parser;
+import ru.airiva.service.fg.KryptoParserInitializeFgService;
 import ru.airiva.service.fg.TlgInteractionFgService;
 import ru.airiva.vo.TlgChannel;
 
@@ -17,10 +19,16 @@ import java.util.List;
 public class TlgInteractionCgService implements TlgInteraction {
 
     private TlgInteractionFgService tlgInteractionFgService;
+    private KryptoParserInitializeFgService kryptoParserInitializeFgService;
 
     @Autowired
     public void setTlgInteractionFgService(TlgInteractionFgService tlgInteractionFgService) {
         this.tlgInteractionFgService = tlgInteractionFgService;
+    }
+
+    @Autowired
+    public void setKryptoParserInitializeFgService(KryptoParserInitializeFgService kryptoParserInitializeFgService) {
+        this.kryptoParserInitializeFgService = kryptoParserInitializeFgService;
     }
 
     @Override
@@ -87,10 +95,13 @@ public class TlgInteractionCgService implements TlgInteraction {
     }
 
     @Override
-    public void includeParsing(String phone, long source, long target, long delay)
+    public void includeParsing(String phone, long source, long target)
             throws TlgWaitAuthCodeBsException, TlgNeedAuthBsException, TlgDefaultBsException, TlgTimeoutBsException {
+        TlgChatPairEntity pair = kryptoParserInitializeFgService.obtainEnabledTlgChatPair(phone, source, target);
         try {
-            tlgInteractionFgService.addCourier(phone, new Courier(source, target, Parser.create(phone, source), delay));
+            if (pair != null) {
+                tlgInteractionFgService.addCourier(phone, new Courier(source, target, new Parser(pair.getOrderedExpressionEntities()), pair.getDelay()));
+            }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new TlgDefaultBsException(e);
