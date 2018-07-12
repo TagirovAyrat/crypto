@@ -14,11 +14,17 @@ import static ru.airiva.entities.EntityConstants.TLG_CLIENTS;
 public class TlgClientEntity {
 
     @Id
+    @GeneratedValue
+    private Long id;
+
     @Column(name = "tlg_id")
     private Long tlgId;
 
     @Column(name = "phone", length = 20)
     private String phone;
+
+    @Column(name = "username")
+    private String username;
 
     @ManyToMany
     @JoinTable(
@@ -36,6 +42,14 @@ public class TlgClientEntity {
     )
     private Set<TlgChatEntity> guestChats;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getTlgId() {
         return tlgId;
     }
@@ -50,6 +64,14 @@ public class TlgClientEntity {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Set<TlgChatEntity> getOwnChats() {
