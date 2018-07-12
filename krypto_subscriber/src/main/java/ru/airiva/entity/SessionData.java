@@ -1,38 +1,43 @@
 package ru.airiva.entity;
 
+import ru.airiva.uam.TlgBotCommandsText;
+
 import java.io.Serializable;
+import java.util.List;
 import java.util.Locale;
 
 public class SessionData implements Serializable {
-    private String chatId;
-    private Locale locale;
+    private String locale;
+    private String tlgId;
     private String currentStep;
     private String currentCommand;
+    private List<TlgBotCommandsText> tlgBotCommandsTexts;
 
-    public SessionData(String chatId, Locale locale, String currentStep, String currentCommand) {
-        this.chatId = chatId;
+    public SessionData(String locale, String tlgId, String currentStep, String currentCommand, List<TlgBotCommandsText> tlgBotCommandsTexts) {
         this.locale = locale;
+        this.tlgId = tlgId;
         this.currentStep = currentStep;
         this.currentCommand = currentCommand;
+        this.tlgBotCommandsTexts = tlgBotCommandsTexts;
     }
 
     public SessionData() {
     }
 
-    public String getChatId() {
-        return chatId;
-    }
-
-    public void setChatId(String chatId) {
-        this.chatId = chatId;
-    }
-
-    public Locale getLocale() {
+    public String getLocale() {
         return locale;
     }
 
-    public void setLocale(Locale locale) {
+    public void setLocale(String locale) {
         this.locale = locale;
+    }
+
+    public String getTlgId() {
+        return tlgId;
+    }
+
+    public void setTlgId(String tlgId) {
+        this.tlgId = tlgId;
     }
 
     public String getCurrentStep() {
@@ -49,5 +54,13 @@ public class SessionData implements Serializable {
 
     public void setCurrentCommand(String currentCommand) {
         this.currentCommand = currentCommand;
+    }
+
+    public List<TlgBotCommandsText> getTlgBotCommandsTexts() {
+        return tlgBotCommandsTexts;
+    }
+
+    public void setTlgBotCommandsTexts(List<TlgBotCommandsText> tlgBotCommandsTexts) {
+        this.tlgBotCommandsTexts = tlgBotCommandsTexts;
     }
 }

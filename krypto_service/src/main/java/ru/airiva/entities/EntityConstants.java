@@ -25,6 +25,10 @@ class EntityConstants {
     static final String TLG_BOT_TRANSLATIONS_GEN = "tlg_bot_translations_gen";
     static final String TLG_BOT_TRANSLATIONS_SEQ = "tlg_bot_translations_seq";
 
+    static final String TLG_BOT_COMMANDS = "tlg_bot_commands";
+    static final String TLG_BOT_COMMANDS_GEN = "tlg_bot_commands_gen";
+    static final String TLG_BOT_COMMANDS_SEQ = "tlg_bot_commands_seq";
+
     static final String TLG_AD_MESSAGES = "tlg_ad_messages";
     static final String TLG_AD_MESSAGES_GEN = "tlg_ad_messages_gen";
     static final String TLG_AD_MESSAGES_SEQ = "tlg_ad_messages_seq";

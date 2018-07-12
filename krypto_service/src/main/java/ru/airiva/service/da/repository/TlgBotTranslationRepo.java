@@ -8,5 +8,5 @@ import ru.airiva.entities.TlgBotTranslationEntity;
  * @author Ivan
  */
 @Repository
-public interface TlgBotTranslationRepo extends JpaRepository<TlgBotTranslationEntity, Long> {
+    public interface TlgBotTranslationRepo extends JpaRepository<TlgBotTranslationEntity, Long> {
 }

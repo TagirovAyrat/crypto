@@ -7,9 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.telegram.telegrambots.ApiContext;
-import org.telegram.telegrambots.bots.DefaultBotOptions;
-import ru.airiva.bot.KryptoPrideLongPolingBot;
 import ru.airiva.entity.SessionData;
 
 @Configuration

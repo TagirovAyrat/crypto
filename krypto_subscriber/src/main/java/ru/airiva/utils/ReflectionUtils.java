@@ -6,6 +6,7 @@ import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import ru.airiva.annotations.BotContext;
 import ru.airiva.annotations.BotContextMethod;
+import ru.airiva.bot.KryptoPrideWebHookBot;
 import ru.airiva.commands.CommandMarker;
 import ru.airiva.commands.StartCommand;
 import ru.airiva.entity.SessionData;
@@ -106,8 +107,12 @@ public class ReflectionUtils {
                     Update up = (Update) param;
                     tgId = String.valueOf(MessageUtils.getTlgIdDependsOnUpdateType(up));
                     updateParams.add(up);
-                    break;
                 }
+                if (param.getClass().equals(KryptoPrideWebHookBot.class)) {
+                    KryptoPrideWebHookBot hookBot = (KryptoPrideWebHookBot) param;
+                    updateParams.add(hookBot);
+                }
+
             }
             for (Parameter targetParam : method.getParameters()) {
                 for (Object sourceParam : updateParams) {

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.methods.BotApiMethod;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
+import ru.airiva.bot.KryptoPrideWebHookBot;
 import ru.airiva.commands.CancelCommand;
 import ru.airiva.commands.CommandMarker;
 import ru.airiva.entity.SessionData;
@@ -14,7 +15,7 @@ import ru.airiva.enums.CommandList;
 import ru.airiva.repo.AreaRedisRepo;
 import ru.airiva.utils.MessageUtils;
 import ru.airiva.utils.ReflectionUtils;
-import ru.airiva.utils.SpringContextProvider;
+import ru.airiva.utils.SpringContext;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -35,7 +36,7 @@ public class MessageHandler implements UpdateHandler {
     }
 
     @Override
-    public BotApiMethod handle(Update update) {
+    public BotApiMethod handle(KryptoPrideWebHookBot kryptoPrideWebHookBot, Update update) {
         SendMessage sendMessage;
         String currentStep = null;
         List<Method> methodsByStep ;
@@ -48,13 +49,10 @@ public class MessageHandler implements UpdateHandler {
         //Получаем текущий контекст
         SessionData sessionData = areaRedisRepo.get(String.valueOf(id));
 
-        //Избавляемся от юникода в сообщении
-        String inputCommand = MessageUtils.extractCommandFromMessage(message, sessionData);
-        if (inputCommand == null) {
-            return MessageUtils.unknownOperationResponse(sessionData, id);
-        }
-        if (inputCommand.equalsIgnoreCase(CommandList.CANCEL.name()) || inputCommand.equalsIgnoreCase(CommandList.LANGUAGE.name())) {
-            CancelCommand bean = SpringContextProvider.getApplicationContext().getBean(CancelCommand.class);
+        //Убираем слеш из сообщения
+        String inputCommand = MessageUtils.extractCommandFromMessage(kryptoPrideWebHookBot, message);
+        if (inputCommand.equalsIgnoreCase(CommandList.CANCEL.name())) {
+            CancelCommand bean = SpringContext.getContext().getBean(CancelCommand.class);
             return bean.initial(update);
         }
         if (sessionData == null) {
@@ -63,7 +61,6 @@ public class MessageHandler implements UpdateHandler {
             commandClass = ReflectionUtils.findContextByCommand(sessionData.getCurrentCommand());
             currentStep = sessionData.getCurrentStep();
         }
-
         try {
             if (currentStep != null) {
                 //Если команда состоит из шагов то ищем текущий шаг
@@ -88,8 +85,11 @@ public class MessageHandler implements UpdateHandler {
         } catch (IllegalArgumentException e) {
             MessageUtils.sendDefaultErrorMessage(id);
         }
-        CommandMarker bean = SpringContextProvider.getApplicationContext().getBean(commandClass);
-        sendMessage = ReflectionUtils.invokeMethod(methodToRun, bean, update);
+        if (inputCommand == null || methodToRun == null || commandClass == null )  {
+            return MessageUtils.unknownOperationResponse(sessionData, id);
+        }
+        CommandMarker bean = SpringContext.getContext().getBean(commandClass);
+        sendMessage = ReflectionUtils.invokeMethod(methodToRun, bean, update, kryptoPrideWebHookBot);
         return sendMessage;
     }
 
