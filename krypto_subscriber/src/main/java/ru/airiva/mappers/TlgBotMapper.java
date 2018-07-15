@@ -26,7 +26,28 @@ public class TlgBotMapper {
         return botList;
     }
 
-    public TlgBotEntity mapperFromWebHookBotToTlgBotEntity(String botToken, PersonEntity personById, String botUsername) {
-        return null;
+    public TlgBotEntity mapperFromWebHookBotToTlgBotEntity(KryptoPrideWebHookBot kryptoPrideWebHookBot, PersonEntity personById) {
+        TlgBotEntity tlgBotEntity = new TlgBotEntity();
+        tlgBotEntity.setToken(kryptoPrideWebHookBot.getBotToken());
+        tlgBotEntity.setPersonEntity(personById);
+        tlgBotEntity.setTlgBotTranslationEntities(mapperFromTlgCommandsToTransaltionEntity(kryptoPrideWebHookBot.getTlgBotCommandsText()));
+        tlgBotEntity.setUsername(kryptoPrideWebHookBot.getBotUsername());
+        return tlgBotEntity;
+    }
+
+    private Set<TlgBotTranslationEntity> mapperFromTlgCommandsToTransaltionEntity(Map<String, List<TlgBotCommandsText>> tlgBotCommandsText) {
+        Set<TlgBotTranslationEntity> tlgBotTranslationEntities = new HashSet<>();
+        tlgBotCommandsText.values().forEach(botCommandsTexts -> {
+            botCommandsTexts.forEach(tlgBotCommandsText1 -> {
+                tlgBotTranslationEntities.add(new TlgBotTranslationEntity() {{
+                    setCommand(tlgBotCommandsText1.getCommand());
+                    setLocale(tlgBotCommandsText1.getLocale());
+                    setCommandText(tlgBotCommandsText1.getCommandText());
+                    setEmojiAtBegin(tlgBotCommandsText1.getStartEmoji());
+                    setEmojiAtEnd(tlgBotCommandsText1.getEndEmoji());
+                }});
+            });
+        });
+        return tlgBotTranslationEntities;
     }
 }

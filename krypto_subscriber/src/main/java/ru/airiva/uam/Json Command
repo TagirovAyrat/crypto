@@ -1,0 +1,186 @@
+{
+  commands: [
+    {
+      "locale": "en",
+      "command": "Faq",
+      "commandText": "FAQ",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "en",
+      "command": "About",
+      "commandText": "About",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "en",
+      "command": "Partners",
+      "commandText": "Partners",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "en",
+      "command": "Packages",
+      "commandText": "Packages",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "en",
+      "command": "Profile",
+      "commandText": "Profile",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "en",
+      "command": "UnpaidOrders",
+      "commandText": "UnpaidOrders",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "en",
+      "command": "Language",
+      "commandText": "Language",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "en",
+      "command": "Exchange",
+      "commandText": "Exchange",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "en",
+      "command": "Support",
+      "commandText": "Support",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "en",
+      "command": "RU",
+      "commandText": "RU",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "en",
+      "command": "EN",
+      "commandText": "EN",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "en",
+      "command": "greetings",
+      "commandText": "Welcome",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "en",
+      "command": "unknown",
+      "commandText": "Unknown operation",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+     {
+      "locale": "ru",
+      "command": "Faq",
+      "commandText": "FAQ",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "ru",
+      "command": "About",
+      "commandText": "О нас",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "ru",
+      "command": "Partners",
+      "commandText": "Партнерам",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "ru",
+      "command": "Packages",
+      "commandText": "Список пакетов",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "ru",
+      "command": "Profile",
+      "commandText": "Профиль",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "ru",
+      "command": "UnpaidOrders",
+      "commandText": "Неоплаченные заказы",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "ru",
+      "command": "Language",
+      "commandText": "Выбор языка",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "ru",
+      "command": "Exchange",
+      "commandText": "Обмен Валюты",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "ru",
+      "command": "Support",
+      "commandText": "Техническая поддержка",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "ru",
+      "command": "RU",
+      "commandText": "RU",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "ru",
+      "command": "EN",
+      "commandText": "EN",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "ru",
+      "command": "greetings",
+      "commandText": "Доброе пожаловать",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    },
+    {
+      "locale": "ru",
+      "command": "unknown",
+      "commandText": "Неизвестная операция",
+      "startEmoji": ":exclamation:",
+      "endEmoji": ":question:"
+    }
+  ]
+}

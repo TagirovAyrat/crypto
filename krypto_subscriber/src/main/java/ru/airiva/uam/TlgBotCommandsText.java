@@ -1,7 +1,6 @@
 package ru.airiva.uam;
 
 import java.io.Serializable;
-
 public class TlgBotCommandsText implements Serializable {
     //Локаль
     private String locale;

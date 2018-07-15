@@ -28,7 +28,7 @@ public class KryptoBotModuleService {
     }
 
     public ConcurrentHashMap<String, KryptoPrideWebHookBot> fillMapWithBotsFromDB() {
-        ConcurrentHashMap<String, KryptoPrideWebHookBot> stringKryptoPrideWebHookBotMap = null;
+        ConcurrentHashMap<String, KryptoPrideWebHookBot> stringKryptoPrideWebHookBotMap = new ConcurrentHashMap<>();
         List<TlgBotEntity> tlgBotEntities = kryptoBotService.allRegistredBots();
         if (tlgBotEntities != null &&!tlgBotEntities.isEmpty()) {
             stringKryptoPrideWebHookBotMap = tlgBotMapper.mapperFromTlgBotToWebHookBot(tlgBotEntities);
@@ -45,8 +45,7 @@ public class KryptoBotModuleService {
         if (personById == null) {
             throw new TlgBotRegisterException("Указанный пользователь не существует");
         }
-        TlgBotEntity tlgBotEntity = tlgBotMapper.mapperFromWebHookBotToTlgBotEntity(kryptoPrideWebHookBot.getBotToken(),
-                personById, kryptoPrideWebHookBot.getBotUsername());
+        TlgBotEntity tlgBotEntity = tlgBotMapper.mapperFromWebHookBotToTlgBotEntity(kryptoPrideWebHookBot, personById);
         if (!kryptoBotService.saveTlgBot(tlgBotEntity).isPresent()) {
             throw new TlgBotRegisterException("Не удалось сохранить бота");
         }

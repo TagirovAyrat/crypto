@@ -102,6 +102,13 @@ public class KeyboardUtils {
                 tlgBotCommandsText.getCommand() + " " + getEmoji(tlgBotCommandsText.getEndEmoji()));
         return null;
     }
+
+    public static Map<String, List<TlgBotCommandsText>> parseCommandsFromJson(List<TlgBotCommandsText> commands) {
+        Map<String, List<TlgBotCommandsText>> commandMap = new HashMap<>();
+        commandMap.put("ru", commands.stream().filter(tlgBotCommandsText -> tlgBotCommandsText.getLocale().equalsIgnoreCase("ru")).collect(Collectors.toList()));
+        commandMap.put("en", commands.stream().filter(tlgBotCommandsText -> tlgBotCommandsText.getLocale().equalsIgnoreCase("en")).collect(Collectors.toList()));
+        return commandMap;
+    }
 }
 
 
