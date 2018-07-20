@@ -1,9 +1,10 @@
 {
-  commands: [
+  "botCommandsTexts": [
     {
       "locale": "en",
       "command": "Faq",
       "translatedCommand": "FAQ",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -11,6 +12,7 @@
       "locale": "en",
       "command": "About",
       "translatedCommand": "About",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -18,6 +20,7 @@
       "locale": "en",
       "command": "Partners",
       "translatedCommand": "Partners",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -25,6 +28,7 @@
       "locale": "en",
       "command": "Packages",
       "translatedCommand": "Packages",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -32,6 +36,7 @@
       "locale": "en",
       "command": "Profile",
       "translatedCommand": "Profile",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -39,6 +44,7 @@
       "locale": "en",
       "command": "UnpaidOrders",
       "translatedCommand": "UnpaidOrders",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -46,6 +52,7 @@
       "locale": "en",
       "command": "Language",
       "translatedCommand": "Language",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -53,6 +60,7 @@
       "locale": "en",
       "command": "Exchange",
       "translatedCommand": "Exchange",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -60,6 +68,7 @@
       "locale": "en",
       "command": "Support",
       "translatedCommand": "Support",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -67,6 +76,7 @@
       "locale": "en",
       "command": "RU",
       "translatedCommand": "RU",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -74,6 +84,7 @@
       "locale": "en",
       "command": "EN",
       "translatedCommand": "EN",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -81,6 +92,7 @@
       "locale": "en",
       "command": "greetings",
       "translatedCommand": "Welcome",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -88,13 +100,15 @@
       "locale": "en",
       "command": "unknown",
       "translatedCommand": "Unknown operation",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
-     {
+    {
       "locale": "ru",
       "command": "Faq",
       "translatedCommand": "FAQ",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -102,6 +116,7 @@
       "locale": "ru",
       "command": "About",
       "translatedCommand": "О нас",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -109,6 +124,7 @@
       "locale": "ru",
       "command": "Partners",
       "translatedCommand": "Партнерам",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -116,6 +132,7 @@
       "locale": "ru",
       "command": "Packages",
       "translatedCommand": "Список пакетов",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -123,6 +140,7 @@
       "locale": "ru",
       "command": "Profile",
       "translatedCommand": "Профиль",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -130,6 +148,7 @@
       "locale": "ru",
       "command": "UnpaidOrders",
       "translatedCommand": "Неоплаченные заказы",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -137,6 +156,7 @@
       "locale": "ru",
       "command": "Language",
       "translatedCommand": "Выбор языка",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -144,6 +164,7 @@
       "locale": "ru",
       "command": "Exchange",
       "translatedCommand": "Обмен Валюты",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -151,6 +172,7 @@
       "locale": "ru",
       "command": "Support",
       "translatedCommand": "Техническая поддержка",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -158,6 +180,7 @@
       "locale": "ru",
       "command": "RU",
       "translatedCommand": "RU",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -165,6 +188,7 @@
       "locale": "ru",
       "command": "EN",
       "translatedCommand": "EN",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -172,6 +196,7 @@
       "locale": "ru",
       "command": "greetings",
       "translatedCommand": "Доброе пожаловать",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     },
@@ -179,6 +204,7 @@
       "locale": "ru",
       "command": "unknown",
       "translatedCommand": "Неизвестная операция",
+      "translatedCommandText":"TextDummy",
       "startEmoji": ":exclamation:",
       "endEmoji": ":question:"
     }

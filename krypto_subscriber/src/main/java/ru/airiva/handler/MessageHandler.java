@@ -39,7 +39,7 @@ public class MessageHandler implements UpdateHandler {
     public BotApiMethod handle(KryptoPrideWebHookBot kryptoPrideWebHookBot, Update update) {
         SendMessage sendMessage;
         String currentStep = null;
-        List<Method> methodsByStep ;
+        List<Method> methodsByStep;
         Method methodToRun = null;
         Class<? extends CommandMarker> commandClass;
 
@@ -61,38 +61,34 @@ public class MessageHandler implements UpdateHandler {
             commandClass = ReflectionUtils.findContextByCommand(sessionData.getCurrentCommand());
             currentStep = sessionData.getCurrentStep();
         }
-        try {
-            if (currentStep != null) {
-                //Если команда состоит из шагов то ищем текущий шаг
-                methodsByStep = ReflectionUtils.getMethodsByStep(commandClass, currentStep);
-                if (methodsByStep != null ) {
-                    //Если вариант только один, то мы нашли наш метод
-                    if (methodsByStep.size() == 1) {
-                        methodToRun = methodsByStep.get(0);
-                    } else if (methodsByStep.size() > 1) {
-                        //Если методов несколько то ищем по введенному тексту
-                            methodToRun = ReflectionUtils.findMethodByTextEquals(methodsByStep, inputCommand);
-                    }
-                }
-            }else {
-                //Ищем по введенному тексту, если не нашли то ищем метод по умолчанию
-                methodToRun = ReflectionUtils.findMethodByTextEqualsInCommandClass(commandClass, inputCommand);
-                //Если класс найден, но нет шага, то выполняем метод по умолчанию - initial
-                if (methodToRun == null) {
-                    methodToRun = ReflectionUtils.getMethodsByCommand(commandClass);
+
+        if (currentStep != null) {
+            //Если команда состоит из шагов то ищем текущий шаг
+            methodsByStep = ReflectionUtils.getMethodsByStep(commandClass, currentStep);
+            if (methodsByStep != null) {
+                //Если вариант только один, то мы нашли наш метод
+                if (methodsByStep.size() == 1) {
+                    methodToRun = methodsByStep.get(0);
+                } else if (methodsByStep.size() > 1) {
+                    //Если методов несколько то ищем по введенному тексту
+                    methodToRun = ReflectionUtils.findMethodByTextEquals(methodsByStep, inputCommand);
                 }
             }
-        } catch (IllegalArgumentException e) {
-            MessageUtils.sendDefaultErrorMessage(id);
+        } else {
+            //Ищем по введенному тексту, если не нашли то ищем метод по умолчанию
+            methodToRun = ReflectionUtils.findMethodByTextEqualsInCommandClass(commandClass, inputCommand);
+            //Если класс найден, но нет шага, то выполняем метод по умолчанию - initial
+            if (methodToRun == null) {
+                methodToRun = ReflectionUtils.getMethodsByCommand(commandClass);
+            }
         }
-        if (inputCommand == null || methodToRun == null || commandClass == null )  {
+        if (inputCommand == null || methodToRun == null || commandClass == null) {
             return MessageUtils.unknownOperationResponse(sessionData, id);
         }
         CommandMarker bean = SpringContext.getContext().getBean(commandClass);
         sendMessage = ReflectionUtils.invokeMethod(methodToRun, bean, update, kryptoPrideWebHookBot);
         return sendMessage;
     }
-
 
 
 }

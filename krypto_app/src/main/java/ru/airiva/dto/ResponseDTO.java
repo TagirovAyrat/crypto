@@ -21,6 +21,10 @@ public class ResponseDTO implements Serializable {
         errorMessage = e.getMessage();
     }
 
+    public ResponseDTO(Exception e) {
+        errorMessage = e.getMessage();
+    }
+
     public ResponseDTO(String errorMessage) {
         this.errorMessage = errorMessage;
     }

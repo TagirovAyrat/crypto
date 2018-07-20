@@ -90,7 +90,6 @@ public class ReflectionUtils {
                 if (declaredAnnotation.step().equals("initial")) {
                     return method;
                 }
-
             }
         }
         return null;

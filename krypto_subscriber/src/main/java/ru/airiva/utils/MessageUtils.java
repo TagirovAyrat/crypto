@@ -13,7 +13,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Component
 public class MessageUtils {
@@ -64,7 +63,7 @@ public class MessageUtils {
         if (sessionData != null &&
                 sessionData.getLocale() != null &&
                 sessionData.getTlgBotCommandsTexts() != null) {
-            String unknownOperation = sessionData.getTlgBotCommandsTexts().stream().filter(tlgBotCommandsText -> tlgBotCommandsText.getCommand().equalsIgnoreCase("unknownoperation")).findFirst().get().getCommandText();
+            String unknownOperation = sessionData.getTlgBotCommandsTexts().stream().filter(tlgBotCommandsText -> tlgBotCommandsText.getCommand().equalsIgnoreCase("unknownoperation")).findFirst().get().getTranslatedCommand();
             return sendErrorMessageWithLocale(id, unknownOperation);
         } else {
             return sendDefaultErrorMessage(id);

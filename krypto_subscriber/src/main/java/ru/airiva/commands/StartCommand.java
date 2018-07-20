@@ -16,10 +16,6 @@ import ru.airiva.repo.AreaRedisRepo;
 import ru.airiva.utils.KeyboardUtils;
 import ru.airiva.utils.MessageUtils;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-
 @Component
 @BotContext(command = CommandList.START)
 public class StartCommand implements CommandMarker {
@@ -48,7 +44,7 @@ public class StartCommand implements CommandMarker {
             return MessageUtils.replyWithReplyKeyboard("Choose your Language", tgId, replyKeyboardMarkup);
         } else {
             String greetings = sessionData.getTlgBotCommandsTexts().stream().filter(tlgBotCommandsText ->
-                    tlgBotCommandsText.getCommand().equalsIgnoreCase("greetings")).findFirst().get().getCommandText();
+                    tlgBotCommandsText.getCommand().equalsIgnoreCase("greetings")).findFirst().get().getTranslatedCommand();
             ReplyKeyboardMarkup replyKeyboardMarkup;
             replyKeyboardMarkup = KeyboardUtils.generateReplyKeyboard(KeyboardUtils.getStaticKeyboard(sessionData));
             return MessageUtils.replyWithReplyKeyboard(greetings, tgId, replyKeyboardMarkup);
@@ -59,6 +55,7 @@ public class StartCommand implements CommandMarker {
     public SendMessage localeRu(Update update, KryptoPrideWebHookBot kryptoPrideWebHookBot) {
         Integer tgId = MessageUtils.getTlgIdDependsOnUpdateType(update);
         SessionData sessionData = areaRedisRepo.get(String.valueOf(tgId));
+        sessionData.setLocale("ru");
         sessionData.setTlgBotCommandsTexts(kryptoPrideWebHookBot.getTlgBotCommandsText().get("ru"));
         areaRedisRepo.put(String.valueOf(tgId), sessionData);
         return initial(update);
@@ -68,6 +65,7 @@ public class StartCommand implements CommandMarker {
     public SendMessage localeEn(Update update, KryptoPrideWebHookBot kryptoPrideWebHookBot) {
         Integer tgId = MessageUtils.getTlgIdDependsOnUpdateType(update);
         SessionData sessionData = areaRedisRepo.get(String.valueOf(tgId));
+        sessionData.setLocale("en");
         sessionData.setTlgBotCommandsTexts(kryptoPrideWebHookBot.getTlgBotCommandsText().get("en"));
         areaRedisRepo.put(String.valueOf(tgId), sessionData);
         return initial(update);

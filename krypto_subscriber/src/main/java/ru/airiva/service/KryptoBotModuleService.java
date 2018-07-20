@@ -31,7 +31,7 @@ public class KryptoBotModuleService {
         ConcurrentHashMap<String, KryptoPrideWebHookBot> stringKryptoPrideWebHookBotMap = new ConcurrentHashMap<>();
         List<TlgBotEntity> tlgBotEntities = kryptoBotService.allRegistredBots();
         if (tlgBotEntities != null &&!tlgBotEntities.isEmpty()) {
-            stringKryptoPrideWebHookBotMap = tlgBotMapper.mapperFromTlgBotToWebHookBot(tlgBotEntities);
+            stringKryptoPrideWebHookBotMap = tlgBotMapper.mapperFromTlgBotEntityToWebHookBot(tlgBotEntities);
         }
         return stringKryptoPrideWebHookBotMap;
     }

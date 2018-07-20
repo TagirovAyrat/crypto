@@ -11,16 +11,17 @@ import ru.airiva.utils.SpringContext;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Component
 public class TlgBotMapper {
-    public ConcurrentHashMap<String, KryptoPrideWebHookBot> mapperFromTlgBotToWebHookBot(List<TlgBotEntity> tlgBotEntity) {
+    public ConcurrentHashMap<String, KryptoPrideWebHookBot> mapperFromTlgBotEntityToWebHookBot(List<TlgBotEntity> tlgBotEntity) {
         ConcurrentHashMap<String, KryptoPrideWebHookBot> botList = new ConcurrentHashMap<>();
         for (TlgBotEntity botEntity : tlgBotEntity) {
             KryptoPrideWebHookBot kryptoPrideWebHookBot = SpringContext.getContext().getBean(KryptoPrideWebHookBot.class);
             kryptoPrideWebHookBot.setUserName(botEntity.getUsername());
             kryptoPrideWebHookBot.setToken(botEntity.getToken());
-            kryptoPrideWebHookBot.setTlgBotCommandsText(KeyboardUtils.getCommandsTextFromTlgBotEntity(botEntity.getTlgBotTranslationEntities()));
+            kryptoPrideWebHookBot.setTlgBotCommandsText(getCommandsTextFromTlgBotEntity(botEntity.getTlgBotTranslationEntities()));
             botList.put(botEntity.getToken(), kryptoPrideWebHookBot);
         }
         return botList;
@@ -42,12 +43,38 @@ public class TlgBotMapper {
                 tlgBotTranslationEntities.add(new TlgBotTranslationEntity() {{
                     setCommand(tlgBotCommandsText1.getCommand());
                     setLocale(tlgBotCommandsText1.getLocale());
-                    setCommandText(tlgBotCommandsText1.getCommandText());
+                    setTranslatedCommand(tlgBotCommandsText1.getTranslatedCommand());
+                    setCommandText(tlgBotCommandsText1.getTranslatedCommandText());
                     setEmojiAtBegin(tlgBotCommandsText1.getStartEmoji());
                     setEmojiAtEnd(tlgBotCommandsText1.getEndEmoji());
                 }});
             });
         });
         return tlgBotTranslationEntities;
+    }
+
+    public static Map<String, List<TlgBotCommandsText>> getCommandsTextFromTlgBotEntity(Set<TlgBotTranslationEntity> tlgBotTranslationEntities) {
+        Map<String, List<TlgBotCommandsText>> commands = new HashMap<>();
+        List<TlgBotCommandsText> ruBotCommandsTexts = new ArrayList<>();
+        List<TlgBotCommandsText> enBotCommandsTexts = new ArrayList<>();
+        List<TlgBotTranslationEntity> ru = tlgBotTranslationEntities.stream().filter(tlgBotTranslationEntity -> tlgBotTranslationEntity.getLocale().equalsIgnoreCase("ru")).collect(Collectors.toList());
+        commandBuilder(ru, ruBotCommandsTexts);
+        List<TlgBotTranslationEntity> en = tlgBotTranslationEntities.stream().filter(tlgBotTranslationEntity -> tlgBotTranslationEntity.getLocale().equalsIgnoreCase("ru")).collect(Collectors.toList());
+        commandBuilder(en, enBotCommandsTexts);
+        commands.put("ru", ruBotCommandsTexts);
+        commands.put("en", enBotCommandsTexts);
+        return commands;
+    }
+
+    public static void commandBuilder(List<TlgBotTranslationEntity> ru, List<TlgBotCommandsText> botCommandsTexts) {
+        ru.forEach(tlgBotTranslationEntity -> {
+            botCommandsTexts.add(new TlgBotCommandsText() {{
+                setCommand(tlgBotTranslationEntity.getCommand());
+                setTranslatedCommandText(tlgBotTranslationEntity.getCommandText());
+                setTranslatedCommand(tlgBotTranslationEntity.getTranslatedCommand());
+                setStartEmoji(tlgBotTranslationEntity.getEmojiAtBegin());
+                setEndEmoji(tlgBotTranslationEntity.getEmojiAtEnd());
+            }});
+        });
     }
 }

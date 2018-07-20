@@ -34,7 +34,7 @@ public class TlgBotEntity {
     @OneToOne(mappedBy = "bot", fetch = FetchType.LAZY)
     private PersonEntity personEntity;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "bot_id")
     private Set<TlgBotTranslationEntity> tlgBotTranslationEntities;
 

@@ -54,7 +54,7 @@ public class KryptoBotService {
     }
     @Transactional
     public Optional<TlgBotEntity> saveTlgBot(TlgBotEntity tlgBotEntity) {
-        return Optional.ofNullable(tlgBotRepo.save(tlgBotEntity));
+        return Optional.ofNullable(tlgBotRepo.saveAndFlush(tlgBotEntity));
     }
 
 

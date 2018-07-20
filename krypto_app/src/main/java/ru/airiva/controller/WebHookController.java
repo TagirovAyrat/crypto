@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,17 +15,15 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.exceptions.TelegramApiRequestException;
 import ru.airiva.bot.KryptoPrideWebHookBot;
 import ru.airiva.dto.ResponseDTO;
+import ru.airiva.dto.request.RegisterBotReq;
 import ru.airiva.exception.BsException;
 import ru.airiva.handler.BotsMapHandler;
 import ru.airiva.properties.BotProperties;
 import ru.airiva.service.KryptoBotModuleService;
-import ru.airiva.uam.TlgBotCommandsText;
 import ru.airiva.utils.KeyboardUtils;
 import ru.airiva.utils.SpringContext;
 
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -80,15 +77,18 @@ public class WebHookController {
      * @return ответ на фронт с текстом ошибки или HTTP.OK если все хорошо.
      */
 
+
+
+
     @PostMapping(value = "/registerbot/{token}/{personId}/{username}", produces = APPLICATION_JSON, consumes = APPLICATION_JSON)
-    public ResponseEntity<ResponseDTO> botRegister(@PathVariable("token") String token, @PathVariable("personId") String personId,
-                                                   @PathVariable("username") String username, @RequestBody ArrayList<TlgBotCommandsText> commands) {
+    public Response botRegister(@PathVariable("token") String token, @PathVariable("personId") String personId,
+                                                   @PathVariable("username") String username, @RequestBody RegisterBotReq commands) {
             try {
             LOGGER.debug("Register bot with token = " + token + " personId = " + personId + " username = " + username);
             KryptoPrideWebHookBot kryptoPrideWebHookBot = SpringContext.getContext().getBean(KryptoPrideWebHookBot.class);
             kryptoPrideWebHookBot.setToken(token);
             kryptoPrideWebHookBot.setUserName(username);
-            kryptoPrideWebHookBot.setTlgBotCommandsText(KeyboardUtils.parseCommandsFromJson(commands));
+            kryptoPrideWebHookBot.setTlgBotCommandsText(KeyboardUtils.parseCommandsFromJson(commands.getBotCommandsTexts()));
             kryptoBotModuleService.saveTlgBot(personId, kryptoPrideWebHookBot);
 
             botsMapHandler.getBotList().put(token, kryptoPrideWebHookBot);
@@ -97,36 +97,12 @@ public class WebHookController {
             kryptoPrideWebHookBot.setWebhook(url, pathToPem);
             LOGGER.debug("bot with token = " + token + " personId = " + personId + " username = " + username + " REGISTRED");
         } catch (BsException e) {
-            return ResponseEntity.ok(new ResponseDTO(e));
+            return Response.ok(new ResponseDTO(e)).build();
         } catch (TelegramApiRequestException e) {
-            return ResponseEntity.ok(new ResponseDTO(new BsException(e.getLocalizedMessage())));
+            return Response.ok(new ResponseDTO(new BsException(e.getLocalizedMessage()))).build();
         }
-        return ResponseEntity.ok(new ResponseDTO());
+        return Response.ok(new ResponseDTO()).build();
     }
-
-//    @PostMapping(value = "/registerbot/{token}/{personId}/{username}", produces = APPLICATION_JSON, consumes = APPLICATION_JSON)
-//    public ResponseEntity<ResponseDTO> botRegister(@PathVariable("token") String token, @PathVariable("personId") String personId,
-//                                                   @PathVariable("username") String username) {
-//            try {
-//            LOGGER.debug("Register bot with token = " + token + " personId = " + personId + " username = " + username);
-//            KryptoPrideWebHookBot kryptoPrideWebHookBot = SpringContext.getContext().getBean(KryptoPrideWebHookBot.class);
-//            kryptoPrideWebHookBot.setToken(token);
-//            kryptoPrideWebHookBot.setUserName(username);
-//            kryptoPrideWebHookBot.setTlgBotCommandsText(KeyboardUtils.parseCommandsFromJson(commands));
-//            kryptoBotModuleService.saveTlgBot(personId, kryptoPrideWebHookBot);
-//
-//            botsMapHandler.getBotList().put(token, kryptoPrideWebHookBot);
-//            String url = botProperties.externalUrl + token;
-//            String pathToPem = botProperties.pathToPem;
-//            kryptoPrideWebHookBot.setWebhook(url, pathToPem);
-//            LOGGER.debug("bot with token = " + token + " personId = " + personId + " username = " + username + " REGISTRED");
-//        } catch (BsException e) {
-//            return ResponseEntity.ok(new ResponseDTO(e));
-//        } catch (TelegramApiRequestException e) {
-//            return ResponseEntity.ok(new ResponseDTO(new BsException(e.getLocalizedMessage())));
-//        }
-//        return ResponseEntity.ok(new ResponseDTO());
-//    }
 
 
     /**
@@ -154,9 +130,9 @@ public class WebHookController {
             BotApiMethod response = kryptoPrideWebHookBot.onWebhookUpdateReceived(update);
             return Response.ok(response).build();
         } catch (Exception e) {
-            LOGGER.error(e.getLocalizedMessage());
+            return Response.serverError().build();
         }
-        return Response.status(Response.Status.OK).build();
+
     }
 
 }

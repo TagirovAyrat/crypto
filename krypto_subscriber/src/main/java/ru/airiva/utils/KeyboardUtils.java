@@ -14,31 +14,8 @@ import java.util.stream.Collectors;
 @Component
 public class KeyboardUtils {
 
-
-    public static Map<String, List<TlgBotCommandsText>> getCommandsTextFromTlgBotEntity(Set<TlgBotTranslationEntity> tlgBotTranslationEntities) {
-        Map<String, List<TlgBotCommandsText>> commands = new HashMap<>();
-        List<TlgBotCommandsText> ruBotCommandsTexts = new ArrayList<>();
-        List<TlgBotCommandsText> enBotCommandsTexts = new ArrayList<>();
-        List<TlgBotTranslationEntity> ru = tlgBotTranslationEntities.stream().filter(tlgBotTranslationEntity -> tlgBotTranslationEntity.getLocale().equalsIgnoreCase("ru")).collect(Collectors.toList());
-        commandBuilder(ru, ruBotCommandsTexts);
-        List<TlgBotTranslationEntity> en = tlgBotTranslationEntities.stream().filter(tlgBotTranslationEntity -> tlgBotTranslationEntity.getLocale().equalsIgnoreCase("ru")).collect(Collectors.toList());
-        commandBuilder(en, enBotCommandsTexts);
-        commands.put("ru", ruBotCommandsTexts);
-        commands.put("en", enBotCommandsTexts);
-        return commands;
-}
     private static final int MAX_ROW = 3;
 
-    public static void commandBuilder(List<TlgBotTranslationEntity> ru, List<TlgBotCommandsText> botCommandsTexts) {
-        ru.forEach(tlgBotTranslationEntity -> {
-            botCommandsTexts.add(new TlgBotCommandsText() {{
-                setCommand(tlgBotTranslationEntity.getCommand());
-                setCommandText(tlgBotTranslationEntity.getCommandText());
-                setStartEmoji(tlgBotTranslationEntity.getEmojiAtBegin());
-                setEndEmoji(tlgBotTranslationEntity.getEmojiAtEnd());
-            }});
-        });
-    }
 
     public static List<List<String>> getLocaleKeyboard() {
         List<List<String>> arrayLists = new ArrayList<>();
@@ -100,7 +77,7 @@ public class KeyboardUtils {
         List<String> row = new ArrayList<>();
         row.add(getEmoji(tlgBotCommandsText.getStartEmoji()) + " " +
                 tlgBotCommandsText.getCommand() + " " + getEmoji(tlgBotCommandsText.getEndEmoji()));
-        return null;
+        return row;
     }
 
     public static Map<String, List<TlgBotCommandsText>> parseCommandsFromJson(List<TlgBotCommandsText> commands) {
