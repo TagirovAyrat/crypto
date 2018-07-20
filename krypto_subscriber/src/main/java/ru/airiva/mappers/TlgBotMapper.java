@@ -6,7 +6,6 @@ import ru.airiva.entities.PersonEntity;
 import ru.airiva.entities.TlgBotEntity;
 import ru.airiva.entities.TlgBotTranslationEntity;
 import ru.airiva.uam.TlgBotCommandsText;
-import ru.airiva.utils.KeyboardUtils;
 import ru.airiva.utils.SpringContext;
 
 import java.util.*;
@@ -67,14 +66,14 @@ public class TlgBotMapper {
     }
 
     public static void commandBuilder(List<TlgBotTranslationEntity> ru, List<TlgBotCommandsText> botCommandsTexts) {
-        ru.forEach(tlgBotTranslationEntity -> {
-            botCommandsTexts.add(new TlgBotCommandsText() {{
-                setCommand(tlgBotTranslationEntity.getCommand());
-                setTranslatedCommandText(tlgBotTranslationEntity.getCommandText());
-                setTranslatedCommand(tlgBotTranslationEntity.getTranslatedCommand());
-                setStartEmoji(tlgBotTranslationEntity.getEmojiAtBegin());
-                setEndEmoji(tlgBotTranslationEntity.getEmojiAtEnd());
-            }});
-        });
+        for (TlgBotTranslationEntity tlgBotTranslationEntity : ru) {
+            TlgBotCommandsText tlgBotCommandsText = new TlgBotCommandsText();
+            tlgBotCommandsText.setCommand(tlgBotTranslationEntity.getCommand());
+            tlgBotCommandsText.setTranslatedCommand(tlgBotTranslationEntity.getTranslatedCommand());
+            tlgBotCommandsText.setTranslatedCommandText(tlgBotTranslationEntity.getCommandText());
+            tlgBotCommandsText.setStartEmoji(tlgBotTranslationEntity.getEmojiAtBegin());
+            tlgBotCommandsText.setEndEmoji(tlgBotTranslationEntity.getEmojiAtEnd());
+            botCommandsTexts.add(tlgBotCommandsText);
+        }
     }
 }
