@@ -68,6 +68,7 @@ public class TlgBotMapper {
     public static void commandBuilder(List<TlgBotTranslationEntity> ru, List<TlgBotCommandsText> botCommandsTexts) {
         for (TlgBotTranslationEntity tlgBotTranslationEntity : ru) {
             TlgBotCommandsText tlgBotCommandsText = new TlgBotCommandsText();
+            tlgBotCommandsText.setLocale(tlgBotTranslationEntity.getLocale());
             tlgBotCommandsText.setCommand(tlgBotTranslationEntity.getCommand());
             tlgBotCommandsText.setTranslatedCommand(tlgBotTranslationEntity.getTranslatedCommand());
             tlgBotCommandsText.setTranslatedCommandText(tlgBotTranslationEntity.getCommandText());
