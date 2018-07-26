@@ -37,4 +37,11 @@ public class ProducerDto {
     public void setActive(Boolean active) {
         this.active = active;
     }
+
+    @Override
+    public String toString() {
+        return "ProducerDto{" +
+                "channelId=" + channelId +
+                '}';
+    }
 }

@@ -1,11 +1,12 @@
 package ru.airiva.utils;
 
 import com.vdurmont.emoji.EmojiParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
-import ru.airiva.entities.TlgBotTranslationEntity;
 import ru.airiva.entity.SessionData;
+import ru.airiva.service.KryptoBotModuleService;
 import ru.airiva.uam.TlgBotCommandsText;
 
 import java.util.*;
@@ -14,8 +15,13 @@ import java.util.stream.Collectors;
 @Component
 public class KeyboardUtils {
 
+    private KryptoBotModuleService kryptoBotModuleService;
     private static final int MAX_ROW = 3;
 
+    @Autowired
+    public void setKryptoBotModuleService(KryptoBotModuleService kryptoBotModuleService) {
+        this.kryptoBotModuleService = kryptoBotModuleService;
+    }
 
     public static List<List<String>> getLocaleKeyboard() {
         List<List<String>> arrayLists = new ArrayList<>();
@@ -44,10 +50,12 @@ public class KeyboardUtils {
         return keyboardMarkup;
     }
 
-    public static List<List<String>> getStaticKeyboard(SessionData sessionData) {
+    public List<List<String>> getStaticKeyboard(SessionData sessionData) {
         List<List<String>> tmpKeyboard = new ArrayList<>();
         List<List<String>> resutlKeyboard = new ArrayList<>();
-        sessionData.getTlgBotCommandsTexts().stream().filter(tlgBotCommandsText -> tlgBotCommandsText.getLocale().equalsIgnoreCase(sessionData.getLocale())).forEach(tlgBotCommandsText -> {
+
+        sessionData.getTlgBotCommandsTexts().stream().filter(tlgBotCommandsText -> tlgBotCommandsText.getLocale().equalsIgnoreCase(sessionData.getLocale()) &&
+                isCommand(tlgBotCommandsText.getCommand())).forEach(tlgBotCommandsText -> {
             {
                 tmpKeyboard.add(getKeyboard(tlgBotCommandsText));
             }
@@ -55,14 +63,23 @@ public class KeyboardUtils {
         final int[] k = {0};
         for (int i = 0; i < tmpKeyboard.size(); i++) {
             List<String> strings = new ArrayList<>();
-            for (int j = 0; j <= (i > MAX_ROW - 1 ? MAX_ROW - 1 : i); j++) {
+            for (int j = 0; (j <= (i > MAX_ROW - 1 ? MAX_ROW - 1 : i)) && (tmpKeyboard.size() - i >= MAX_ROW) ; j++) {
                 strings.add(String.valueOf(tmpKeyboard.get(k[0]++)));
+            }
+            if (tmpKeyboard.size() - i < MAX_ROW) {
+                for (int j = i; j < tmpKeyboard.size(); j++) {
+                    strings.add(String.valueOf(tmpKeyboard.get(k[0]++)));
+                }
+                break;
             }
             i = k[0] - 1;
             resutlKeyboard.add(strings);
         }
-        return tmpKeyboard;
+        return resutlKeyboard;
+    }
 
+    private boolean isCommand(String command) {
+        return kryptoBotModuleService.getComandsFroKeyboard().stream().anyMatch(s -> command.contains(s));
     }
 
     private static String getEmoji(String emoji) {

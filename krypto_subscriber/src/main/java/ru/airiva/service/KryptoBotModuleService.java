@@ -50,5 +50,9 @@ public class KryptoBotModuleService {
             throw new TlgBotRegisterException("Не удалось сохранить бота");
         }
     }
+    public List<String> getComandsFroKeyboard() {
+        return kryptoBotService.getCommandList();
+    }
+
 
 }

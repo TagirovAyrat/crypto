@@ -21,11 +21,16 @@ import ru.airiva.utils.MessageUtils;
 public class StartCommand implements CommandMarker {
 
     private AreaRedisRepo areaRedisRepo;
+    private KeyboardUtils keyboardUtils;
     public static final Logger LOGGER = LoggerFactory.getLogger(StartCommand.class);
 
     @Autowired
     public void setAreaRedisRepo(AreaRedisRepo areaRedisRepo) {
         this.areaRedisRepo = areaRedisRepo;
+    }
+    @Autowired
+    public void setKeyboardUtils(KeyboardUtils keyboardUtils) {
+        this.keyboardUtils = keyboardUtils;
     }
 
     @Override
@@ -46,7 +51,7 @@ public class StartCommand implements CommandMarker {
             String greetings = sessionData.getTlgBotCommandsTexts().stream().filter(tlgBotCommandsText ->
                     tlgBotCommandsText.getCommand().equalsIgnoreCase("greetings")).findFirst().get().getTranslatedCommand();
             ReplyKeyboardMarkup replyKeyboardMarkup;
-            replyKeyboardMarkup = KeyboardUtils.generateReplyKeyboard(KeyboardUtils.getStaticKeyboard(sessionData));
+            replyKeyboardMarkup = KeyboardUtils.generateReplyKeyboard(keyboardUtils.getStaticKeyboard(sessionData));
             return MessageUtils.replyWithReplyKeyboard(greetings, tgId, replyKeyboardMarkup);
         }
     }
