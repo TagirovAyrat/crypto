@@ -1,10 +1,23 @@
 package ru.airiva.entities;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.util.Objects;
 import java.util.Set;
 
-import static ru.airiva.entities.EntityConstants.*;
+import static ru.airiva.entities.EntityConstants.TLG_TR_PACKAGES;
+import static ru.airiva.entities.EntityConstants.TLG_TR_PACKAGES_GEN;
+import static ru.airiva.entities.EntityConstants.TLG_TR_PACKAGES_SEQ;
 
 /**
  * @author Ivan
@@ -21,7 +34,7 @@ public class TlgTrPackageEntity {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-                        name = "tlg_tr_packages_chat_pairs",
+            name = "tlg_tr_packages_chat_pairs",
             joinColumns = {@JoinColumn(name = "tlg_tr_package_id")},
             inverseJoinColumns = {@JoinColumn(name = "chat_pair_id")}
     )
@@ -82,11 +95,12 @@ public class TlgTrPackageEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TlgTrPackageEntity that = (TlgTrPackageEntity) o;
-        return Objects.equals(tlgChatPairEntities, that.tlgChatPairEntities);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tlgChatPairEntities);
+
+        return Objects.hash(id);
     }
 }
