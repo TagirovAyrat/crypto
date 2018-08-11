@@ -4,12 +4,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.airiva.dto.request.ClientRq;
 import ru.airiva.dto.response.ChannelsRs;
 import ru.airiva.dto.response.ClientsRs;
@@ -20,15 +15,14 @@ import ru.airiva.mapping.converter.ChannelConverter;
 import ru.airiva.mapping.converter.ClientConverter;
 import ru.airiva.service.cg.TlgInteractionCgService;
 import ru.airiva.service.fg.PersonFgService;
+import ru.airiva.service.fg.TlgChatFgService;
 import ru.airiva.service.fg.TlgClientFgService;
 import ru.airiva.vo.TlgChannel;
 
 import java.util.List;
 import java.util.Set;
 
-import static ru.airiva.dto.response.RsDto.codewait;
-import static ru.airiva.dto.response.RsDto.error;
-import static ru.airiva.dto.response.RsDto.success;
+import static ru.airiva.dto.response.RsDto.*;
 
 /**
  * @author Ivan
@@ -40,9 +34,15 @@ public class ClientsController {
     private PersonFgService personFgService;
     private TlgClientFgService tlgClientFgService;
     private TlgInteractionCgService tlgInteractionCgService;
+    private TlgChatFgService tlgChatFgService;
 
     private ClientConverter clientConverter;
     private ChannelConverter channelConverter;
+
+    @Autowired
+    public void setTlgChatFgService(TlgChatFgService tlgChatFgService) {
+        this.tlgChatFgService = tlgChatFgService;
+    }
 
     @Autowired
     public void setPersonFgService(PersonFgService personFgService) {
@@ -100,6 +100,60 @@ public class ClientsController {
         }
         return ResponseEntity.ok(rs);
     }
+
+    @GetMapping("/cons/add")
+    public ResponseEntity<RsDto> consAdd(@RequestParam("phone") String phone, @RequestParam("chatId") String chatId) {
+        RsDto rs;
+        try {
+            rs = new RsDto();
+            tlgInteractionCgService.addConsumer(phone, chatId);
+        } catch (Exception e) {
+            return ResponseEntity.ok(error(e));
+        }
+        return ResponseEntity.ok(rs);
+    }
+    @GetMapping("/cons/get")
+    public ResponseEntity<RsDto> consGet(@RequestParam("phone") String phone) {
+        RsDto rs;
+        try {
+            rs = new RsDto();
+            tlgInteractionCgService.getConsumers(phone);
+        } catch (Exception e) {
+            return ResponseEntity.ok(error(e));
+        }
+        return ResponseEntity.ok(rs);
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<RsDto> availableChannel(@RequestParam String phone) {
+        ChannelsRs rs;
+        try {
+            rs = new ChannelsRs();
+            Set<TlgChannel> availableChannel = tlgInteractionCgService.getAvailableChannel(phone);
+            if (CollectionUtils.isNotEmpty(availableChannel)) {
+                availableChannel.forEach(sortedChannel -> {
+                    if (sortedChannel != null) rs.getChannels().add(channelConverter.convert(sortedChannel));
+                });
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.ok(error(e));
+        }
+        return ResponseEntity.ok(rs);
+    }
+
+    @GetMapping("/prods/add")
+    public ResponseEntity<RsDto> prods(@RequestParam("phone") String phone, @RequestParam("chatId") String chatId) {
+        RsDto rs;
+        try {
+            rs = new RsDto();
+            tlgInteractionCgService.addProducer(phone, chatId);
+        } catch (Exception e) {
+            return ResponseEntity.ok(error(e));
+        }
+        return ResponseEntity.ok(rs);
+    }
+
 
     @GetMapping(value = "/start", params = "phone")
     ResponseEntity<RsDto> start(@RequestParam("phone") String phone) {

@@ -1,9 +1,11 @@
 package ru.airiva.service.cg;
 
+import ru.airiva.entities.TlgChatEntity;
 import ru.airiva.exception.*;
 import ru.airiva.vo.TlgChannel;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TlgInteraction {
 
@@ -123,4 +125,32 @@ public interface TlgInteraction {
      * @return тип кода (смс, чат)
      */
     String resendCode(String phone) throws TlgNeedAuthBsException, TlgDefaultBsException, TlgTimeoutBsException;
+
+    /**
+     * Добавление потребителя
+     * @param phone - номер телефона клиента
+     * @param consumers - канал для добавления
+     */
+    void addConsumer(String phone, String consumers) throws TlgDefaultBsException, TlgNeedAuthBsException, TlgWaitAuthCodeBsException, TlgTimeoutBsException;
+
+    /**
+     * Получение списка каналов, которые не являются ни потребителями ни источниками
+     * @param phone - телефон клоиента
+     * @return
+     */
+    Set<TlgChannel> getAvailableChannel(String phone) throws TlgDefaultBsException, TlgNeedAuthBsException, TlgWaitAuthCodeBsException, TlgTimeoutBsException;
+
+    /**
+     * Добавление источника
+     * @param phone - номер телефона клиента
+     * @param consumer - канал для добавления
+     */
+    void addProducer(String phone, String consumer) throws TlgDefaultBsException, TlgNeedAuthBsException, TlgWaitAuthCodeBsException, TlgTimeoutBsException;
+
+    /**
+     *  Получение списка потребителей
+     * @param phone - телефон клиента
+     * @return
+     */
+    Set<TlgChatEntity> getConsumers(String phone) throws TlgDefaultBsException, TlgNeedAuthBsException, TlgWaitAuthCodeBsException, TlgTimeoutBsException;
 }

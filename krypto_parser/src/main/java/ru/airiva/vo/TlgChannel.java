@@ -11,6 +11,8 @@ public class TlgChannel implements Comparable<TlgChannel> {
     private String title;
     private long chatId;
     private String username;
+    private Boolean isConsumer;
+    private Boolean isProducer;
     boolean admin = false;
 
     public void setTitle(String title) {
@@ -47,6 +49,26 @@ public class TlgChannel implements Comparable<TlgChannel> {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public Boolean getConsumer() {
+        return isConsumer;
+    }
+
+    public void setConsumer(Boolean consumer) {
+        isConsumer = consumer;
+    }
+
+    public Boolean getProducer() {
+        return isProducer;
+    }
+
+    public void setProducer(Boolean producer) {
+        isProducer = producer;
     }
 
     @Override

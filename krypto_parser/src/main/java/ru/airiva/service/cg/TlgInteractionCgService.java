@@ -1,25 +1,29 @@
 package ru.airiva.service.cg;
 
+import converter.TlgChannelToTlgChatEntityConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.airiva.entities.TlgChatEntity;
 import ru.airiva.entities.TlgChatPairEntity;
+import ru.airiva.entities.TlgClientEntity;
 import ru.airiva.exception.*;
 import ru.airiva.parser.Courier;
 import ru.airiva.parser.Expression;
 import ru.airiva.parser.Parser;
 import ru.airiva.service.fg.KryptoParserInitializeFgService;
+import ru.airiva.service.fg.TlgClientFgService;
 import ru.airiva.service.fg.TlgInteractionFgService;
 import ru.airiva.vo.TlgChannel;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class TlgInteractionCgService implements TlgInteraction {
 
     private TlgInteractionFgService tlgInteractionFgService;
     private KryptoParserInitializeFgService kryptoParserInitializeFgService;
+    private TlgClientFgService tlgClientFgService;
+    private TlgChannelToTlgChatEntityConverter tlgChannelToTlgChatEntityConverter;
 
     @Autowired
     public void setTlgInteractionFgService(TlgInteractionFgService tlgInteractionFgService) {
@@ -29,6 +33,14 @@ public class TlgInteractionCgService implements TlgInteraction {
     @Autowired
     public void setKryptoParserInitializeFgService(KryptoParserInitializeFgService kryptoParserInitializeFgService) {
         this.kryptoParserInitializeFgService = kryptoParserInitializeFgService;
+    }
+    @Autowired
+    public void setTlgClientFgService(TlgClientFgService tlgClientFgService) {
+        this.tlgClientFgService = tlgClientFgService;
+    }
+    @Autowired
+    public void setTlgChannelToTlgChatEntityConverter(TlgChannelToTlgChatEntityConverter tlgChannelToTlgChatEntityConverter) {
+        this.tlgChannelToTlgChatEntityConverter = tlgChannelToTlgChatEntityConverter;
     }
 
     @Override
@@ -168,4 +180,66 @@ public class TlgInteractionCgService implements TlgInteraction {
         }
         return codeType;
     }
+
+    @Override
+    public void addConsumer(String phone, String consumer) throws TlgDefaultBsException, TlgNeedAuthBsException, TlgWaitAuthCodeBsException, TlgTimeoutBsException {
+        List<TlgChannel> sortedChannels = getSortedChannels(phone);
+        TlgChannel consChannel = sortedChannels.stream().filter(tlgChannel -> consumer.equals(tlgChannel.getChatId())).findFirst().get();
+        consChannel.setConsumer(Boolean.TRUE);
+        consChannel.setProducer(Boolean.FALSE);
+        TlgClientEntity byPhone = tlgClientFgService.getByPhone(phone);
+        TlgChatEntity chatFromEntity = byPhone.getOwnChats().stream().filter(tlgChatEntity -> consChannel.equals(tlgChatEntity.getTlgChatId())).findFirst().orElse(new TlgChatEntity());
+        tlgChannelToTlgChatEntityConverter.convert(consChannel, chatFromEntity);
+        tlgClientFgService.save(byPhone);
+    }
+
+    @Override
+    public Set<TlgChannel> getAvailableChannel(String phone) throws TlgDefaultBsException, TlgNeedAuthBsException, TlgWaitAuthCodeBsException, TlgTimeoutBsException {
+        List<TlgChannel> sortedChannels = getSortedChannels(phone);
+        Set<TlgChannel> tlgChannels = new HashSet<>(sortedChannels);
+        TlgClientEntity byPhone = tlgClientFgService.getByPhone(phone);
+        byPhone.getOwnChats().forEach(tlgChatEntity -> {
+            TlgChannel channelToRemove = tlgChannels.stream().filter(tlgChannel -> tlgChatEntity.getTlgChatId().equals(tlgChannel.getChatId()) &&
+                    (tlgChatEntity.getProducer() || tlgChatEntity.getConsumer())).findFirst().get();
+            tlgChannels.remove(channelToRemove);
+        });
+        return tlgChannels;
+    }
+    @Override
+    public void addProducer(String phone, String consumer) throws TlgDefaultBsException, TlgNeedAuthBsException, TlgWaitAuthCodeBsException, TlgTimeoutBsException {
+        List<TlgChannel> sortedChannels = getSortedChannels(phone);
+        TlgChannel consChannel = sortedChannels.stream().filter(tlgChannel -> consumer.equals(tlgChannel.getChatId())).findFirst().get();
+        consChannel.setConsumer(Boolean.FALSE);
+        consChannel.setProducer(Boolean.TRUE);
+        TlgClientEntity byPhone = tlgClientFgService.getByPhone(phone);
+        TlgChatEntity chatFromEntity = byPhone.getOwnChats().stream().filter(tlgChatEntity -> consChannel.equals(tlgChatEntity.getTlgChatId())).findFirst().orElse(new TlgChatEntity());
+        tlgChannelToTlgChatEntityConverter.convert(consChannel, chatFromEntity);
+        tlgClientFgService.save(byPhone);
+    }
+
+    @Override
+    public Set<TlgChatEntity> getConsumers(String phone) throws TlgDefaultBsException, TlgNeedAuthBsException, TlgWaitAuthCodeBsException, TlgTimeoutBsException {
+        List<TlgChannel> sortedChannels = getSortedChannels(phone);
+        TlgClientEntity byPhone = tlgClientFgService.getByPhone(phone);
+        Set<TlgChatEntity> ownChats = byPhone.getOwnChats();
+        Set<TlgChatEntity> toRemove = new HashSet<>();
+            for (TlgChatEntity ownChat : ownChats) {
+                int count = 0;
+                for (TlgChannel sortedChannel : sortedChannels) {
+                    if (sortedChannel.getChatId() == ownChat.getTlgChatId()) {
+                        count++;
+                    }
+                }
+                if (count == 0) {
+                    toRemove.add(ownChat);
+                }
+            }
+        for (TlgChatEntity tlgChatEntity : toRemove) {
+            byPhone.getOwnChats().remove(tlgChatEntity);
+        }
+        tlgClientFgService.save(byPhone);
+        return byPhone.getOwnChats();
+    }
+
+
 }

@@ -1,10 +1,12 @@
 package ru.airiva.entities;
 
-import javax.persistence.*;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
-import static ru.airiva.entities.EntityConstants.*;
+import static ru.airiva.entities.EntityConstants.TLG_CHATS;
 
 /**
  * @author Ivan
@@ -25,6 +27,12 @@ public class TlgChatEntity {
 
     @Column(name = "is_channel")
     private boolean channel = false;
+
+    @Column(name = "is_producer")
+    private Boolean isProducer = false;
+
+    @Column(name = "is_consumer")
+    private Boolean isConsumer = false;
 
     public Long getTlgChatId() {
         return tlgChatId;
@@ -56,6 +64,22 @@ public class TlgChatEntity {
 
     public void setChannel(boolean channel) {
         this.channel = channel;
+    }
+
+    public Boolean getProducer() {
+        return isProducer;
+    }
+
+    public void setProducer(Boolean producer) {
+        isProducer = producer;
+    }
+
+    public Boolean getConsumer() {
+        return isConsumer;
+    }
+
+    public void setConsumer(Boolean consumer) {
+        isConsumer = consumer;
     }
 
     @Override
