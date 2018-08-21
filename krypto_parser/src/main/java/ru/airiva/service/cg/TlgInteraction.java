@@ -1,6 +1,5 @@
 package ru.airiva.service.cg;
 
-import ru.airiva.entities.TlgChatEntity;
 import ru.airiva.exception.*;
 import ru.airiva.vo.TlgChannel;
 
@@ -152,5 +151,30 @@ public interface TlgInteraction {
      * @param phone - телефон клиента
      * @return
      */
-    Set<TlgChatEntity> getConsumers(String phone) throws TlgDefaultBsException, TlgNeedAuthBsException, TlgWaitAuthCodeBsException, TlgTimeoutBsException;
+    Set<TlgChannel> getConsumers(String phone) throws TlgDefaultBsException, TlgNeedAuthBsException, TlgWaitAuthCodeBsException, TlgTimeoutBsException;
+
+    /**
+     * Удаление потребителя
+     * @param phone - телефон клиента
+     * @param chatId - ID чата
+     */
+    void delConsumer(String phone, Long chatId);
+
+    /**
+     * Получение списка источников
+     * @param phone - телефон клиента
+     * @return
+     * @throws TlgNeedAuthBsException
+     * @throws TlgDefaultBsException
+     * @throws TlgTimeoutBsException
+     * @throws TlgWaitAuthCodeBsException
+     */
+    Set<TlgChannel> getProducers(String phone) throws TlgNeedAuthBsException, TlgDefaultBsException, TlgTimeoutBsException, TlgWaitAuthCodeBsException;
+
+    /**
+     * Удаление источника
+     * @param phone - телефон клиента
+     * @param chatId - id канала
+     */
+    void delProducer(String phone, Long chatId);
 }

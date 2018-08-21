@@ -43,6 +43,10 @@ public class TlgChannel implements Comparable<TlgChannel> {
         this.id = id;
     }
 
+    public TlgChannel() {
+        this.id = 0;
+    }
+
     public boolean isAdmin() {
         return admin;
     }

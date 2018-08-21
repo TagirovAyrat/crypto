@@ -47,7 +47,7 @@ public class TlgClientFgService {
     public TlgClientEntity getByPhone(String phone) {
         return tlgClientRepo.findByPhone(phone);
     }
-
+    @Transactional
     public void deleteByPhone(String phone) {
         tlgClientRepo.deleteByPhone(phone);
     }
@@ -61,8 +61,7 @@ public class TlgClientFgService {
         return client;
     }
     public void save(TlgClientEntity tlgClientEntity){
-        tlgClientRepo.saveAndFlush(tlgClientEntity);
+        tlgClientRepo.save(tlgClientEntity);
     }
-
 
 }

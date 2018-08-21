@@ -1,11 +1,10 @@
-package converter;
+package ru.airiva.converter;
 
 import org.springframework.stereotype.Component;
 import ru.airiva.entities.TlgChatEntity;
 import ru.airiva.vo.TlgChannel;
-
 @Component
-public class TlgChannelToTlgChatEntityConverter  implements  Converter<TlgChatEntity, TlgChannel>{
+public class TlgChannelToEntityConverter implements Converter<TlgChatEntity, TlgChannel>{
 
     @Override
     public void convert(TlgChannel source, TlgChatEntity dest) {

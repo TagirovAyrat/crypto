@@ -114,10 +114,26 @@ public class ClientsController {
     }
     @GetMapping("/cons/get")
     public ResponseEntity<RsDto> consGet(@RequestParam("phone") String phone) {
+        ChannelsRs rs;
+        try {
+            rs = new ChannelsRs();
+            Set<TlgChannel> consumers = tlgInteractionCgService.getConsumers(phone);
+            if (CollectionUtils.isNotEmpty(consumers)) {
+                consumers.forEach(sortedChannel -> {
+                    if (sortedChannel != null) rs.getChannels().add(channelConverter.convert(sortedChannel));
+                });
+            }
+        } catch (Exception e) {
+            return ResponseEntity.ok(error(e));
+        }
+        return ResponseEntity.ok(rs);
+    }
+    @GetMapping("/cons/rem")
+    public ResponseEntity<RsDto> consRem(@RequestParam("phone") String phone, @RequestParam("chatId") Long chatId){
         RsDto rs;
         try {
             rs = new RsDto();
-            tlgInteractionCgService.getConsumers(phone);
+            tlgInteractionCgService.delConsumer(phone, chatId);
         } catch (Exception e) {
             return ResponseEntity.ok(error(e));
         }
@@ -125,7 +141,7 @@ public class ClientsController {
     }
 
     @GetMapping("/available")
-    public ResponseEntity<RsDto> availableChannel(@RequestParam String phone) {
+    public ResponseEntity<RsDto> availableChannel(@RequestParam("phone") String phone) {
         ChannelsRs rs;
         try {
             rs = new ChannelsRs();
@@ -153,6 +169,34 @@ public class ClientsController {
         }
         return ResponseEntity.ok(rs);
     }
+    @GetMapping("/prods/get")
+    public ResponseEntity<RsDto> prodsGet(@RequestParam("phone") String phone) {
+        ChannelsRs rs;
+        try {
+            rs = new ChannelsRs();
+            Set<TlgChannel> consumers = tlgInteractionCgService.getProducers(phone);
+            if (CollectionUtils.isNotEmpty(consumers)) {
+                consumers.forEach(sortedChannel -> {
+                    if (sortedChannel != null) rs.getChannels().add(channelConverter.convert(sortedChannel));
+                });
+            }
+        } catch (Exception e) {
+            return ResponseEntity.ok(error(e));
+        }
+        return ResponseEntity.ok(rs);
+    }
+    @GetMapping("prods/rem")
+    public ResponseEntity<RsDto> prodsRem(@RequestParam("phone") String phone, @RequestParam("chatId") Long chatId){
+        RsDto rs;
+        try {
+            rs = new RsDto();
+            tlgInteractionCgService.delProducer(phone, chatId);
+        } catch (Exception e) {
+            return ResponseEntity.ok(error(e));
+        }
+        return ResponseEntity.ok(rs);
+    }
+
 
 
     @GetMapping(value = "/start", params = "phone")
