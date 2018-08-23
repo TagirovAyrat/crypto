@@ -5,6 +5,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.airiva.converter.TlgChannelToEntityConverter;
 import ru.airiva.dto.request.ClientRq;
 import ru.airiva.dto.response.ChannelsRs;
 import ru.airiva.dto.response.ClientsRs;
@@ -35,6 +36,7 @@ public class ClientsController {
     private TlgClientFgService tlgClientFgService;
     private TlgInteractionCgService tlgInteractionCgService;
     private TlgChatFgService tlgChatFgService;
+    private TlgChannelToEntityConverter tlgChannelToEntityConverter;
 
     private ClientConverter clientConverter;
     private ChannelConverter channelConverter;
@@ -241,6 +243,7 @@ public class ClientsController {
             if (!isCodeCorrect) {
                 throw new Exception();
             }
+            tlgInteractionCgService.saveClientChats(phone);
         } catch (Exception e) {
             return ResponseEntity.ok(error(e));
         }
@@ -254,6 +257,17 @@ public class ClientsController {
         try {
             tlgInteractionCgService.logout(phone);
             tlgClientFgService.deleteByPhone(phone);
+            rs = success();
+        } catch (Exception e) {
+            rs = error(e);
+        }
+        return ResponseEntity.ok(rs);
+    }
+    @GetMapping(value = "/saveChats", params = {"phone"})
+    ResponseEntity<RsDto> saveChats(@RequestParam("phone") String phone) {
+        RsDto rs;
+        try {
+            tlgInteractionCgService.saveClientChats(phone);
             rs = success();
         } catch (Exception e) {
             rs = error(e);
@@ -277,6 +291,7 @@ public class ClientsController {
         }
         return ResponseEntity.ok(rs);
     }
+
 
 
 }

@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Objects;
 
 import static ru.airiva.entities.EntityConstants.TLG_CHATS;
 
@@ -29,10 +28,10 @@ public class TlgChatEntity {
     private boolean channel = false;
 
     @Column(name = "is_producer")
-    private Boolean isProducer = false;
+    private boolean isProducer;
 
     @Column(name = "is_consumer")
-    private Boolean isConsumer = false;
+    private boolean isConsumer;
 
     public Long getTlgChatId() {
         return tlgChatId;
@@ -80,19 +79,5 @@ public class TlgChatEntity {
 
     public void setConsumer(Boolean consumer) {
         isConsumer = consumer;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TlgChatEntity that = (TlgChatEntity) o;
-        return Objects.equals(tlgChatId, that.tlgChatId);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(tlgChatId);
     }
 }

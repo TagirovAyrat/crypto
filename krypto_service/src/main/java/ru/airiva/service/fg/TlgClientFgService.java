@@ -60,8 +60,9 @@ public class TlgClientFgService {
         personFgService.updatePerson(client);
         return client;
     }
+    @Transactional
     public void save(TlgClientEntity tlgClientEntity){
-        tlgClientRepo.save(tlgClientEntity);
+        tlgClientRepo.saveAndFlush(tlgClientEntity);
     }
 
 }

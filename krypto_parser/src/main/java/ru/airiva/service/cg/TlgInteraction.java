@@ -177,4 +177,10 @@ public interface TlgInteraction {
      * @param chatId - id канала
      */
     void delProducer(String phone, Long chatId);
+
+    /**
+     * Сохранение чатов пользователя в базу данных
+     * @param phone - телефон клиента
+     */
+    void saveClientChats(String phone) throws TlgDefaultBsException, TlgNeedAuthBsException, TlgWaitAuthCodeBsException, TlgTimeoutBsException;
 }

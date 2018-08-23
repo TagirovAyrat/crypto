@@ -19,7 +19,6 @@ import ru.airiva.service.fg.TlgInteractionFgService;
 import ru.airiva.vo.TlgChannel;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class TlgInteractionCgService implements TlgInteraction {
@@ -217,7 +216,18 @@ public class TlgInteractionCgService implements TlgInteraction {
     public Set<TlgChannel> getAvailableChannel(String phone) throws TlgDefaultBsException, TlgNeedAuthBsException, TlgWaitAuthCodeBsException, TlgTimeoutBsException {
         TlgClientEntity byPhone = removeInactiveChats(phone);
         Set<TlgChannel> tlgChannels = new HashSet<>();
-        List<TlgChatEntity> collect = byPhone.getOwnChats().stream().filter(tlgChatEntity -> !tlgChatEntity.getProducer() && !tlgChatEntity.getConsumer()).collect(Collectors.toList());
+        List<TlgChatEntity> collect = new ArrayList<>();
+        if (byPhone.getOwnChats() != null && !byPhone.getOwnChats().isEmpty()) {
+            for (TlgChatEntity ownChat : byPhone.getOwnChats()) {
+
+                if (!ownChat.getConsumer() && !ownChat.getProducer()) {
+                    collect.add(ownChat);
+                }
+            }
+
+        }
+//        List<TlgChatEntity> collect = byPhone.getOwnChats().stream().filter(tlgChatEntity ->
+//                !tlgChatEntity.getProducer() && !tlgChatEntity.getConsumer()).collect(Collectors.toList());
         collect.forEach(tlgChatEntity -> {
             TlgChannel tlgChannel = new TlgChannel();
             tlgEntityToChannelConverter.convert(tlgChatEntity, tlgChannel);
@@ -321,4 +331,20 @@ public class TlgInteractionCgService implements TlgInteraction {
             LOGGER.error(ex.getLocalizedMessage());
         }
     }
+
+    @Override
+    public void saveClientChats(String phone) throws TlgDefaultBsException, TlgNeedAuthBsException, TlgWaitAuthCodeBsException, TlgTimeoutBsException {
+        Set<TlgChatEntity> chats = new HashSet<>();
+        List<TlgChannel> sortedChannels = getSortedChannels(phone);
+        sortedChannels.forEach(tlgChannel -> {
+            TlgChatEntity chatFromEntity = new TlgChatEntity();
+            tlgChannelToEntityConverter.convert(tlgChannel, chatFromEntity);
+            chats.add(chatFromEntity);
+        });
+        TlgClientEntity byPhone = tlgClientFgService.getByPhone(phone);
+        byPhone.setOwnChats(chats);
+        tlgClientFgService.save(byPhone);
+    }
+
+
 }

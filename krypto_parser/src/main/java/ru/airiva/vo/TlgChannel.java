@@ -11,8 +11,8 @@ public class TlgChannel implements Comparable<TlgChannel> {
     private String title;
     private long chatId;
     private String username;
-    private Boolean isConsumer;
-    private Boolean isProducer;
+    private Boolean isConsumer = false;
+    private Boolean isProducer = false;
     boolean admin = false;
 
     public void setTitle(String title) {
