@@ -20,7 +20,12 @@ import ru.airiva.tdlib.TdApi;
 import ru.airiva.vo.TlgChannel;
 import ru.airiva.vo.TlgChat;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeoutException;
@@ -71,7 +76,7 @@ public class TlgInteractionFgService {
      * @throws InterruptedException       если поток был прерван
      * @throws TlgWaitAuthCodeBsException если авторизация клиента на шаге подтверждения кода аутентификации
      */
-    private TlgClient checkAuth(final String phone) throws TlgNeedAuthBsException, InterruptedException, TlgWaitAuthCodeBsException, TlgTimeoutBsException {
+    public TlgClient checkAuth(final String phone) throws TlgNeedAuthBsException, InterruptedException, TlgWaitAuthCodeBsException, TlgTimeoutBsException {
         TlgClient tlgClient = CLIENTS.get(phone);
         if (tlgClient == null) throw new TlgNeedAuthBsException();
         //Запрашиваем статус авторизации клиента
@@ -89,8 +94,7 @@ public class TlgInteractionFgService {
                 throw new TlgNeedAuthBsException();
         }
     }
-
-    /**
+/**
      * Авторизация клиента
      *
      * @param phone номер телефона клиента в формате +7ХХХХХХХХХ

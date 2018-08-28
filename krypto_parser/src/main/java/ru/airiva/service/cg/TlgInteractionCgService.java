@@ -9,7 +9,11 @@ import ru.airiva.converter.TlgEntityToChannelConverter;
 import ru.airiva.entities.TlgChatEntity;
 import ru.airiva.entities.TlgChatPairEntity;
 import ru.airiva.entities.TlgClientEntity;
-import ru.airiva.exception.*;
+import ru.airiva.exception.TlgDefaultBsException;
+import ru.airiva.exception.TlgFailAuthBsException;
+import ru.airiva.exception.TlgNeedAuthBsException;
+import ru.airiva.exception.TlgTimeoutBsException;
+import ru.airiva.exception.TlgWaitAuthCodeBsException;
 import ru.airiva.parser.Courier;
 import ru.airiva.parser.Expression;
 import ru.airiva.parser.Parser;
@@ -18,7 +22,12 @@ import ru.airiva.service.fg.TlgClientFgService;
 import ru.airiva.service.fg.TlgInteractionFgService;
 import ru.airiva.vo.TlgChannel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Service
 public class TlgInteractionCgService implements TlgInteraction {
@@ -192,6 +201,16 @@ public class TlgInteractionCgService implements TlgInteraction {
             throw new TlgDefaultBsException(e);
         }
         return codeType;
+    }
+
+    @Override
+    public void checkAuth(String phone) throws TlgTimeoutBsException, TlgWaitAuthCodeBsException, TlgNeedAuthBsException, TlgDefaultBsException {
+        try {
+            tlgInteractionFgService.checkAuth(phone);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new TlgDefaultBsException(e);
+        }
     }
 
     @Override

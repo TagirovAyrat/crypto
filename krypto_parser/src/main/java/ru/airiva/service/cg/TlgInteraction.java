@@ -1,6 +1,10 @@
 package ru.airiva.service.cg;
 
-import ru.airiva.exception.*;
+import ru.airiva.exception.TlgDefaultBsException;
+import ru.airiva.exception.TlgFailAuthBsException;
+import ru.airiva.exception.TlgNeedAuthBsException;
+import ru.airiva.exception.TlgTimeoutBsException;
+import ru.airiva.exception.TlgWaitAuthCodeBsException;
 import ru.airiva.vo.TlgChannel;
 
 import java.util.List;
@@ -124,6 +128,13 @@ public interface TlgInteraction {
      * @return тип кода (смс, чат)
      */
     String resendCode(String phone) throws TlgNeedAuthBsException, TlgDefaultBsException, TlgTimeoutBsException;
+
+    /**
+     * Проверка авторизации
+     *
+     * @param phone телефон клиента
+     */
+    void checkAuth(String phone) throws TlgTimeoutBsException, TlgWaitAuthCodeBsException, TlgNeedAuthBsException, TlgDefaultBsException;
 
     /**
      * Добавление потребителя

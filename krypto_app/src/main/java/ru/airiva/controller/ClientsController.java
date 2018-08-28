@@ -4,13 +4,19 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.airiva.converter.TlgChannelToEntityConverter;
 import ru.airiva.dto.request.ClientRq;
 import ru.airiva.dto.response.ChannelsRs;
 import ru.airiva.dto.response.ClientsRs;
 import ru.airiva.dto.response.RsDto;
 import ru.airiva.entities.TlgClientEntity;
+import ru.airiva.exception.TlgNeedAuthBsException;
 import ru.airiva.exception.TlgWaitAuthCodeBsException;
 import ru.airiva.mapping.converter.ChannelConverter;
 import ru.airiva.mapping.converter.ClientConverter;
@@ -23,7 +29,10 @@ import ru.airiva.vo.TlgChannel;
 import java.util.List;
 import java.util.Set;
 
-import static ru.airiva.dto.response.RsDto.*;
+import static ru.airiva.dto.response.RsDto.codewait;
+import static ru.airiva.dto.response.RsDto.error;
+import static ru.airiva.dto.response.RsDto.success;
+import static ru.airiva.dto.response.RsDto.unauth;
 
 /**
  * @author Ivan
@@ -229,6 +238,22 @@ public class ClientsController {
             rs = success();
         } catch (TlgWaitAuthCodeBsException e) {
             rs = codewait();
+        } catch (Exception e) {
+            rs = error(e);
+        }
+        return ResponseEntity.ok(rs);
+    }
+
+    @GetMapping(value = "/checkauth", params = "phone")
+    ResponseEntity<RsDto> checkAuth(@RequestParam("phone") String phone) {
+        RsDto rs;
+        try {
+            tlgInteractionCgService.checkAuth(phone);
+            rs = success();
+        } catch (TlgWaitAuthCodeBsException e) {
+            rs = codewait();
+        } catch (TlgNeedAuthBsException e) {
+            rs = unauth(e);
         } catch (Exception e) {
             rs = error(e);
         }
